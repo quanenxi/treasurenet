@@ -18,9 +18,7 @@ jobs:
           user: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           connect_timeout: 180s
-          first_ssh: |-
-            pwd
-          scp: |-
+          scp: |
             README.md => ${{ env.DEPLOY_DIR }}
-          last_ssh: |-
+          last_ssh: |
             ll
