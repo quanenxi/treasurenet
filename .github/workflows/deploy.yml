@@ -1,9 +1,15 @@
 name: deploy
+#on:
+#  pull_request:
+#    branches:
+#      - main
+# 推送 main 分支触发构建
 on:
   push:
     branches: [ main ]
 env:
-  DEPLOY_DIR: /home/ubuntu/
+  SOURCE_DIR: README.md
+  TARGET_DIR: /home/tnuser
 jobs:
   build:
     name: build
@@ -11,6 +17,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: make install
+      - run: go env -w GO111MODULE=on
+      - run: go mod tidy
+      - run: make install
+
       - name: Deploy to Server
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
@@ -19,6 +31,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           connect_timeout: 180s
           scp: |
-            README.md => ${{ env.DEPLOY_DIR }}
+            ${{ env.SOURCE_DIR }} => ${{ env.TARGET_DIR }}
           last_ssh: |
             ll
