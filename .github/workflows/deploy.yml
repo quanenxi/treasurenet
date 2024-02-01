@@ -10,6 +10,7 @@ on:
 env:
   SOURCE_DIR: README.md
   TARGET_DIR: /home/tnuser
+  GO_VERSION: 1.18
 jobs:
   build:
     name: build
@@ -17,8 +18,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
-      - name: make install
+      - name: Set up Go version  ${{ env.GO_VERSION }}
+        uses: actions/setup-go@v2
+        with:
+          go-version:  ${{ env.GO_VERSION }}
+      - run: go version
       - run: go env -w GO111MODULE=on
       - run: go mod tidy
       - run: make install
